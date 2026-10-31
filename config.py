@@ -1,8 +1,11 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "change-this-to-a-secret-key")
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 
     MYSQL_HOST = "localhost"
     MYSQL_USER = "root"
