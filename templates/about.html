@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+About Us | AeroNova AI
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ABOUT HERO -->
+
+<section class="about-hero">
+
+    <div class="container about-hero-content">
+
+        <span class="about-tag">
+
+            ABOUT AERONOVA AI
+
+        </span>
+
+
+        <h1>
+
+            We believe travel should feel
+            <span>smarter, simpler and limitless.</span>
+
+        </h1>
+
+
+        <p>
+
+            AeroNova AI is an intelligent airline reservation platform
+            designed to bring flight search, booking, passenger management
+            and AI-powered assistance into one seamless experience.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- OUR STORY -->
+
+<section class="about-story">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+
+            <div class="col-lg-6">
+
+                <span class="section-mini-title">
+
+                    OUR STORY
+
+                </span>
+
+
+                <h2>
+
+                    Building a better way to experience air travel.
+
+                </h2>
+
+
+                <p>
+
+                    AeroNova AI was created with a simple idea:
+                    airline booking platforms should do more than display
+                    flights. They should understand the traveler and make
+                    every stage of the journey easier.
+
+                </p>
+
+
+                <p>
+
+                    Our platform combines intelligent assistance,
+                    flight management, interactive seat selection,
+                    digital boarding passes and role-based operations
+                    into one connected airline ecosystem.
+
+                </p>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="about-image-card">
+
+                    <div class="about-plane-icon">
+
+                        <i class="fa-solid fa-plane-up"></i>
+
+                    </div>
+
+
+                    <div class="about-stat-card">
+
+                        <strong>AI + Aviation</strong>
+
+                        <span>
+                            Technology designed for smarter journeys.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- MISSION / VISION -->
+
+<section class="mission-section">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+
+            <div class="col-md-6">
+
+                <div class="mission-card">
+
+                    <div class="mission-icon">
+
+                        <i class="fa-solid fa-bullseye"></i>
+
+                    </div>
+
+                    <h3>Our Mission</h3>
+
+                    <p>
+
+                        To make air travel booking simpler and more intelligent
+                        by combining technology, automation and user-friendly
+                        design.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="mission-card">
+
+                    <div class="mission-icon">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </div>
+
+                    <h3>Our Vision</h3>
+
+                    <p>
+
+                        To create a connected digital travel experience where
+                        passengers, airline staff and administrators can work
+                        through one smart platform.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PLATFORM VALUES -->
+
+<section class="about-values">
+
+    <div class="container">
+
+
+        <div class="center-heading">
+
+            <span class="section-mini-title">
+
+                WHAT DRIVES US
+
+            </span>
+
+            <h2>
+                Built for the future of travel.
+            </h2>
+
+        </div>
+
+
+        <div class="row g-4 mt-3">
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="value-card">
+
+                    <i class="fa-solid fa-brain"></i>
+
+                    <h4>Intelligence</h4>
+
+                    <p>
+                        AI-assisted travel support and smarter experiences.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="value-card">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    <h4>Security</h4>
+
+                    <p>
+                        Secure accounts and protected booking information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="value-card">
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                    <h4>Simplicity</h4>
+
+                    <p>
+                        Complex airline operations made easy to understand.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="value-card">
+
+                    <i class="fa-solid fa-globe"></i>
+
+                    <h4>Connectivity</h4>
+
+                    <p>
+                        Bringing travelers and airline operations together.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FINAL CTA -->
+
+<section class="about-cta">
+
+    <div class="container text-center">
+
+        <span>
+            START YOUR JOURNEY WITH US
+        </span>
+
+        <h2>
+            The future of smarter travel starts here.
+        </h2>
+
+        <a href="{{ url_for('auth.register') }}">
+
+            Join AeroNova
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

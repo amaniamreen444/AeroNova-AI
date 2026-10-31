@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login | AeroNova AI
+{% endblock %}
+
+
+{% block content %}
+
+<div class="auth-page">
+
+
+    <!-- =====================================
+         LEFT SIDE
+    ====================================== -->
+
+    <section class="auth-visual">
+
+        <div class="auth-visual-content">
+
+            <h1>
+                Your Journey,<br>
+                Our Priority
+            </h1>
+
+            <p>
+                Search, book and manage flights easily with AeroNova AI.
+                Enjoy the best fares, seamless booking and world-class support.
+            </p>
+
+
+            <div class="auth-features">
+
+
+                <div class="auth-feature">
+
+                    <i class="fa-solid fa-ticket"></i>
+
+                    <h5>Best Prices</h5>
+
+                    <p>
+                        Get the best deals on domestic and international flights.
+                    </p>
+
+                </div>
+
+
+                <div class="auth-feature">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <h5>Safe & Secure</h5>
+
+                    <p>
+                        Your safety and data security are our priority.
+                    </p>
+
+                </div>
+
+
+                <div class="auth-feature">
+
+                    <i class="fa-solid fa-suitcase"></i>
+
+                    <h5>Easy Booking</h5>
+
+                    <p>
+                        Book your flights in just a few simple steps.
+                    </p>
+
+                </div>
+
+
+                <div class="auth-feature">
+
+                    <i class="fa-solid fa-headset"></i>
+
+                    <h5>24/7 Support</h5>
+
+                    <p>
+                        AeroNova support is always here to help you.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         RIGHT SIDE
+    ====================================== -->
+
+    <section class="auth-form-side">
+
+        <div class="auth-card">
+
+
+            <div class="auth-heading">
+
+                <h2>Welcome Back! ✈️</h2>
+
+                <p>
+                    Login to continue your journey with AeroNova AI
+                </p>
+
+            </div>
+
+
+            <!-- TEMPORARY TEST ACCOUNT DETAILS -->
+
+            <div class="test-account-box">
+
+                <strong>
+                    <i class="fa-solid fa-circle-info"></i>
+                    Test Accounts
+                </strong>
+
+                <p>
+                    Admin:
+                    <b>admin@email.com</b>
+                </p>
+
+                <p>
+                    Staff:
+                    <b>staff@email.com</b>
+                </p>
+
+                <p>
+                    Passenger:
+                    <b>user@email.com</b>
+                </p>
+
+            </div>
+
+
+            <form method="POST">
+
+
+                <label>Email Address</label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <input type="email"
+                           name="email"
+                           placeholder="Enter your email"
+                           required>
+
+                </div>
+
+
+
+                <label>Password</label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input type="password"
+                           name="password"
+                           id="password"
+                           placeholder="Enter your password"
+                           required>
+
+                </div>
+
+
+                <div class="auth-links">
+
+                    <label>
+
+                        <input type="checkbox">
+                        Remember me
+
+                    </label>
+
+                    <a href="#">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <button type="submit"
+                        class="auth-submit-btn">
+
+                    Login
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+
+            </form>
+
+
+            <p class="text-center mt-4"
+               style="font-size: 13px;">
+
+                Don't have an account?
+
+                <a href="{{ url_for('auth.register') }}"
+                   style="color:#2364c4;
+                          text-decoration:none;
+                          font-weight:600;">
+
+                    Register Now
+
+                </a>
+
+            </p>
+
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

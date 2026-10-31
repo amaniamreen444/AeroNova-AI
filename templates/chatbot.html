@@ -1,0 +1,355 @@
+
+<div id="aeronova-chatbot">
+    <button id="chat-toggle" type="button" aria-label="Open AI assistant">✈</button>
+
+    <section id="chat-window" class="chat-hidden">
+        <header class="chat-header">
+            <div>
+                <strong>AeroNova AI</strong>
+                <small>Your travel assistant</small>
+            </div>
+            <button id="chat-close" type="button" aria-label="Close chat">×</button>
+        </header>
+
+        <div id="chat-messages">
+            <div class="bot-message">
+                Hi! 👋 I'm AeroNova AI. Where would you like to travel?
+            </div>
+        </div>
+
+        <form id="chat-form">
+            <input id="chat-input" type="text" placeholder="Ask me anything..."
+                maxlength="2000" autocomplete="off" required>
+            <button id="chat-send" type="submit">Send</button>
+        </form>
+    </section>
+</div>
+
+<style>
+#aeronova-chatbot {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+}
+
+#chat-toggle {
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: #0759c7;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px #0003;
+}
+
+#chat-window {
+    width: 340px;
+    height: 440px;
+    max-height: 75vh;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 25px #0003;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.chat-hidden {
+    display: none !important;
+}
+
+.chat-header {
+    background: #0759c7;
+    color: white;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat-header strong,
+.chat-header small {
+    display: block;
+}
+
+.chat-header small {
+    margin-top: 4px;
+    opacity: 0.85;
+}
+
+#chat-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+#chat-messages {
+    flex: 1;
+    min-height: 0;
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bot-message,
+.user-message {
+    max-width: 85%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: #eef3fa;
+    color: #172337;
+}
+
+.user-message {
+    align-self: flex-end;
+    background: #0759c7;
+    color: white;
+}
+
+.chat-flight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    width: 100%;
+}
+
+.chat-flight-card {
+    box-sizing: border-box;
+    width: 100%;
+    background: white;
+    color: #1f2937;
+    border: 1px solid #dbe3ef;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.chat-flight-card h4 {
+    margin: 0 0 8px;
+    color: #174ea6;
+    font-size: 15px;
+}
+
+.chat-flight-card p {
+    margin: 5px 0;
+    font-size: 13px;
+}
+
+.chat-flight-price {
+    font-size: 17px !important;
+    font-weight: bold;
+    color: #087443;
+}
+
+.chat-flight-card button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    background: #174ea6;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.chat-flight-card button:hover {
+    background: #0b397f;
+}
+
+.chat-flight-card button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#chat-form {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #eee;
+}
+
+#chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid #ccd3dd;
+    border-radius: 8px;
+}
+
+#chat-send {
+    background: #0759c7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0 12px;
+    cursor: pointer;
+}
+
+#chat-send:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+@media (max-width: 420px) {
+    #aeronova-chatbot {
+        right: 12px;
+        bottom: 12px;
+    }
+
+    #chat-window {
+        width: calc(100vw - 24px);
+        height: min(520px, 80vh);
+    }
+}
+</style>
+
+<script>
+(() => {
+    const toggle = document.getElementById("chat-toggle");
+    const close = document.getElementById("chat-close");
+    const windowBox = document.getElementById("chat-window");
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("chat-input");
+    const messages = document.getElementById("chat-messages");
+    const send = document.getElementById("chat-send");
+
+    toggle.addEventListener("click", () => {
+        windowBox.classList.toggle("chat-hidden");
+        if (!windowBox.classList.contains("chat-hidden")) {
+            input.focus();
+        }
+    });
+
+    close.addEventListener("click", () => {
+        windowBox.classList.add("chat-hidden");
+    });
+
+    function addMessage(text, className) {
+        const message = document.createElement("div");
+        message.className = className;
+        message.textContent = text;
+        messages.appendChild(message);
+        messages.scrollTop = messages.scrollHeight;
+        return message;
+    }
+
+    function showFlightCards(container, flights) {
+        const flightList = document.createElement("div");
+        flightList.className = "chat-flight-list";
+
+        flights.forEach((flight) => {
+            const card = document.createElement("div");
+            card.className = "chat-flight-card";
+
+            const airline = document.createElement("h4");
+            airline.textContent = flight.airline || "Airline";
+            card.appendChild(airline);
+
+            const number = document.createElement("p");
+            number.textContent = "Flight: " + (flight.flight_number || "N/A");
+            card.appendChild(number);
+
+            const route = document.createElement("p");
+            route.textContent =
+                (flight.origin || "") + " → " + (flight.destination || "");
+            card.appendChild(route);
+
+            const departure = document.createElement("p");
+            departure.textContent =
+                "Departure: " + (flight.departure_time || "N/A");
+            card.appendChild(departure);
+
+            const arrival = document.createElement("p");
+            arrival.textContent =
+                "Arrival: " + (flight.arrival_time || "N/A");
+            card.appendChild(arrival);
+
+            const price = document.createElement("p");
+            const amount = Number(flight.price);
+            price.className = "chat-flight-price";
+            price.textContent = Number.isFinite(amount)
+                ? "Price: ₹" + amount.toLocaleString("en-IN")
+                : "Price unavailable";
+            card.appendChild(price);
+
+            if (flight.select_url) {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.textContent = "Select Flight";
+
+                button.addEventListener("click", () => {
+                    window.location.href = flight.select_url;
+                });
+
+                card.appendChild(button);
+            }
+
+            flightList.appendChild(card);
+        });
+
+        container.appendChild(flightList);
+    }
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const message = input.value.trim();
+        if (!message) return;
+
+        addMessage(message, "user-message");
+        input.value = "";
+        input.disabled = true;
+        send.disabled = true;
+
+        const loading = addMessage("Thinking...", "bot-message");
+
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+
+            loading.textContent =
+                data.reply || "Sorry, I couldn't answer that.";
+
+            if (!response.ok) {
+                loading.textContent += " Please try again.";
+            } else if (Array.isArray(data.flights) && data.flights.length > 0) {
+                showFlightCards(loading, data.flights);
+            } else if (data.flights && data.flights.length === 0) {
+                loading.appendChild(document.createElement("br"));
+                loading.appendChild(document.createTextNode(
+                    "No flight options were returned for this search."
+                ));
+            }
+        } catch (error) {
+            loading.textContent = "Unable to connect. Please try again.";
+        } finally {
+            input.disabled = false;
+            send.disabled = false;
+            input.focus();
+            messages.scrollTop = messages.scrollHeight;
+        }
+    });
+})();
+</script>

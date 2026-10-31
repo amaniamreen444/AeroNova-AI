@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+Booking Summary | AeroNova
+{% endblock %}
+
+{% block content %}
+
+<section class="booking-page">
+
+    <div class="container summary-page">
+
+        <span class="section-mini-title">
+            BOOKING REVIEW
+        </span>
+
+        <h1>
+            Your journey is almost ready! ✈️
+        </h1>
+
+        <p class="booking-subtitle">
+            Review your flight and passenger information.
+        </p>
+
+
+        <div class="final-summary-card">
+
+            <div class="summary-section">
+
+                <h3>
+                    Flight
+                </h3>
+
+                <p>
+                    <strong>
+                        {{ flight.airline }}
+                        {{ flight.flight_number }}
+                    </strong>
+                </p>
+
+                <p>
+                    {{ flight.origin }}
+                    →
+                    {{ flight.destination }}
+                </p>
+
+            </div>
+
+
+            <div class="summary-section">
+
+                <h3>
+                    Passengers
+                </h3>
+
+                {% for passenger in passengers %}
+
+                <p>
+                    {{ loop.index }}.
+                    {{ passenger.full_name }}
+
+                    —
+                    Seat {{ seats[loop.index0] }}
+
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="summary-total">
+
+                <span>
+                    Total Amount
+                </span>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(total_price) }}
+                </strong>
+
+            </div>
+
+
+            <div class="payment-coming">
+
+                <i class="fa-solid fa-credit-card"></i>
+
+                <div>
+
+                    <h3>
+                        Payment is next
+                    </h3>
+
+                    <p>
+                        Phase 2C will add multiple payment methods,
+                        booking confirmation and database saving.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

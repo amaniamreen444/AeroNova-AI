@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}
+Booking Confirmed | AeroNova
+{% endblock %}
+
+{% block content %}
+
+<section class="booking-page">
+
+    <div class="container confirmation-page">
+
+        <div class="confirmation-card">
+
+            <div class="success-circle">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <span class="section-mini-title">
+                BOOKING CONFIRMED
+            </span>
+
+            <h1>Your journey is confirmed! ✈️</h1>
+
+            <p class="booking-subtitle">
+                Your payment was successful and your booking
+                has been saved.
+            </p>
+
+
+            <div class="confirmation-flight">
+
+                <h2>
+                    {{ bookings[0].airline }}
+                    {{ bookings[0].flight_number }}
+                </h2>
+
+                <div class="confirmation-route">
+
+                    <div>
+                        <strong>
+                            {{ bookings[0].origin }}
+                        </strong>
+
+                        <span>
+                            {{ bookings[0].departure_time.strftime('%d %b %Y') }}
+                        </span>
+
+                        <b>
+                            {{ bookings[0].departure_time.strftime('%H:%M') }}
+                        </b>
+                    </div>
+
+                    <i class="fa-solid fa-plane"></i>
+
+                    <div>
+                        <strong>
+                            {{ bookings[0].destination }}
+                        </strong>
+
+                        <span>
+                            {{ bookings[0].arrival_time.strftime('%d %b %Y') }}
+                        </span>
+
+                        <b>
+                            {{ bookings[0].arrival_time.strftime('%H:%M') }}
+                        </b>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="confirmed-passengers">
+
+                <h3>Passenger Seats</h3>
+
+                {% for booking in bookings %}
+
+                <div class="confirmed-passenger-row">
+
+                    <span>
+                        Passenger {{ loop.index }}
+                    </span>
+
+                    <strong>
+                        Seat {{ booking.seat_number }}
+                    </strong>
+
+                    <span class="confirmed-status">
+                        Confirmed
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="confirmation-total">
+
+                <span>Total Paid</span>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(total_price) }}
+                </strong>
+
+            </div>
+
+
+            <div class="confirmation-actions">
+
+                <a
+                    href="{{ url_for('bookings.passenger_dashboard') }}"
+                    class="continue-booking-btn"
+                >
+                    Go to My Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

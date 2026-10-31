@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}
+Available Flights | AeroNova AI
+{% endblock %}
+
+{% block content %}
+
+<section class="results-hero">
+
+    <div class="container">
+
+        <span class="section-mini-title">
+            FLIGHT SEARCH RESULTS
+        </span>
+
+        <h1>
+            Your journey starts here.
+        </h1>
+
+        <p>
+            {% if origin and destination %}
+                Showing available flights from
+                <strong>{{ origin }}</strong>
+                to
+                <strong>{{ destination }}</strong>
+            {% else %}
+                Explore available flights and find your perfect journey.
+            {% endif %}
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="results-section">
+
+    <div class="container">
+
+
+        <!-- SEARCH SUMMARY -->
+
+        <div class="search-summary-card">
+
+            <div>
+
+                <span>FROM</span>
+                <strong>{{ origin or "Any location" }}</strong>
+
+            </div>
+
+
+            <i class="fa-solid fa-arrow-right-long"></i>
+
+
+            <div>
+
+                <span>TO</span>
+                <strong>{{ destination or "Any location" }}</strong>
+
+            </div>
+
+
+            <div>
+
+                <span>DATE</span>
+                <strong>
+                    {{ departure_date or "Flexible" }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>TRAVELERS</span>
+                <strong>
+                    {{ passengers }}
+                </strong>
+
+            </div>
+
+
+            <a href="{{ url_for('main.home') }}#flight-search"
+               class="modify-search-btn">
+
+                <i class="fa-solid fa-sliders"></i>
+
+                Modify Search
+
+            </a>
+
+        </div>
+
+
+        <!-- RESULTS -->
+
+        <div class="results-header">
+
+            <div>
+
+                <h2>
+                    Available Flights
+                </h2>
+
+                <p>
+                    {{ flights|length }} flight(s) found
+                </p>
+
+            </div>
+
+        </div>
+
+        {% if flights %}
+
+        <div class="flights-list">
+        
+            {% for flight in flights %}
+        
+            <div class="flight-result-card">
+        
+                <div class="airline-info">
+        
+                    <div class="airline-logo">
+                        <i class="fa-solid fa-plane"></i>
+                    </div>
+        
+                    <div>
+                        <strong>{{ flight.airline }}</strong>
+                        <span>{{ flight.flight_number }}</span>
+                    </div>
+        
+                </div>
+        
+                <div class="flight-route">
+        
+                    <div class="flight-time">
+                        <strong>{{ flight.departure_time or "--:--" }}</strong>
+                        <span>{{ flight.origin }}</span>
+                    </div>
+        
+                    <div class="route-line">
+                        <span></span>
+                        <i class="fa-solid fa-plane"></i>
+                        <span></span>
+                    </div>
+        
+                    <div class="flight-time">
+                        <strong>{{ flight.arrival_time or "--:--" }}</strong>
+                        <span>{{ flight.destination }}</span>
+                    </div>
+        
+                </div>
+        
+                <div class="seat-info">
+        
+                    <span>
+                        <i class="fa-solid fa-chair"></i>
+                        Seats
+                    </span>
+        
+                    <strong>{{ flight.available_seats }}</strong>
+        
+                </div>
+        
+                <div class="flight-price">
+        
+                    <span>Starting from</span>
+        
+                    <strong>
+                        {% if flight.price > 0 %}
+                            ₹{{ "{:,.0f}".format(flight.price) }}
+                        {% else %}
+                            Price unavailable
+                        {% endif %}
+                    </strong>
+        
+                    <small>per passenger</small>
+        
+                </div>
+        
+                <a href="{{ url_for(
+                    'flights.live_flight_details',
+                    airline=flight.airline,
+                    flight_number=flight.flight_number,
+                    origin=flight.origin,
+                    destination=flight.destination,
+                    departure_time=flight.departure_time,
+                    arrival_time=flight.arrival_time,
+                    price=flight.price,
+                    passengers=passengers
+                ) }}" class="select-flight-btn">
+        
+                    Select Flight
+                    <i class="fa-solid fa-check"></i>
+        
+                </a>
+        
+            </div>
+        
+            {% endfor %}
+        
+        </div>
+        
+        {% else %}
+        
+        <div class="no-flights-card">
+        
+            <div class="no-flight-icon">
+                <i class="fa-solid fa-plane-circle-exclamation"></i>
+            </div>
+        
+            <h3>No flights found</h3>
+        
+            <p>
+                We couldn't find flights matching your search.
+                Try changing your departure city, destination or date.
+            </p>
+        
+            <a href="{{ url_for('main.home') }}#flight-search"
+               class="primary-search-again">
+                Search Again
+            </a>
+        
+        </div>
+        
+        {% endif %}
+        
+        {% endblock %}

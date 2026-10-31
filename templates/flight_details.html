@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}
+Flight Details | AeroNova
+{% endblock %}
+
+{% block content %}
+
+<section class="booking-page">
+
+    <div class="container">
+
+        <div class="booking-progress">
+
+            <div class="progress-step active">
+                <span>1</span>
+                Flight
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step">
+                <span>2</span>
+                Passengers
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step">
+                <span>3</span>
+                Seats
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step">
+                <span>4</span>
+                Payment
+            </div>
+
+        </div>
+
+
+        <div class="booking-layout">
+
+            <div class="booking-main">
+
+                <span class="section-mini-title">
+                    REVIEW YOUR FLIGHT
+                </span>
+
+                <h1>Ready for takeoff? ✈️</h1>
+
+                <div class="selected-flight-card">
+
+                    <div class="flight-card-top">
+
+                        <div>
+
+                            <div class="airline-icon-large">
+                                <i class="fa-solid fa-plane"></i>
+                            </div>
+
+                            <h3>{{ flight.airline }}</h3>
+
+                            <p>{{ flight.flight_number }}</p>
+
+                        </div>
+
+                        <span class="status-badge">
+                            {{ flight.status }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="big-flight-route">
+
+                        <div>
+
+                            <strong>
+                                {{ flight.origin }}
+                            </strong>
+
+                            <span>
+                                {{ flight.departure_time.strftime('%d %b %Y') }}
+                            </span>
+
+                            <b>
+                                {{ flight.departure_time.strftime('%H:%M') }}
+                            </b>
+
+                        </div>
+
+
+                        <div class="route-center">
+
+                            <span></span>
+
+                            <i class="fa-solid fa-plane"></i>
+
+                            <span></span>
+
+                            <small>
+                                Direct Flight
+                            </small>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                {{ flight.destination }}
+                            </strong>
+
+                            <span>
+                                {{ flight.arrival_time.strftime('%d %b %Y') }}
+                            </span>
+
+                            <b>
+                                {{ flight.arrival_time.strftime('%H:%M') }}
+                            </b>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <aside class="booking-sidebar">
+
+                <h3>Trip Summary</h3>
+
+                <div class="summary-row">
+                    <span>Passengers</span>
+                    <strong>{{ passengers }}</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Available Seats</span>
+                    <strong>{{ flight.available_seats }}</strong>
+                </div>
+
+                <hr>
+
+                <div class="summary-row total-row">
+                    <span>Total</span>
+
+                    <strong>
+                        ₹{{ "{:,.0f}".format(
+                            flight.price * passengers
+                        ) }}
+                    </strong>
+                </div>
+
+                <small>
+                    ₹{{ "{:,.0f}".format(flight.price) }}
+                    per passenger
+                </small>
+
+
+                {% if flight.is_live %}
+                <a href="{{ url_for(
+                    'bookings.book_live_flight',
+                    flight_number=flight.flight_number,
+                    airline=flight.airline,
+                    origin=flight.origin,
+                    destination=flight.destination,
+                    departure_time=flight.departure_time.strftime('%Y-%m-%d %H:%M'),
+                    arrival_time=flight.arrival_time.strftime('%Y-%m-%d %H:%M'),
+                    price=flight.price,
+                    passengers=passengers
+               ) }}" class="continue-booking-btn">
+               
+               Continue Booking
+               <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            {% else %}
+            
+                <a href="{{ url_for(
+                    'bookings.start_booking',
+                    flight_id=flight.id,
+                    passengers=passengers
+                ) }}"
+                   class="continue-booking-btn">
+            
+                    Continue Booking
+            
+                    <i class="fa-solid fa-arrow-right"></i>
+            
+                </a>
+            
+            {% endif %}
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

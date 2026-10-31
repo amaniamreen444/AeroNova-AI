@@ -1,0 +1,187 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+.support-container {
+    max-width: 950px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.support-card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.support-card h2,
+.support-card h3 {
+    color: #173b67;
+    margin-top: 0;
+}
+
+.support-form label {
+    display: block;
+    margin: 15px 0 7px;
+    font-weight: 600;
+}
+
+.support-form input,
+.support-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d4dce5;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font: inherit;
+}
+
+.support-form textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.support-button {
+    margin-top: 18px;
+    padding: 12px 22px;
+    background: #1769aa;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.support-button:hover {
+    background: #104e80;
+}
+
+.support-item {
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 18px;
+    overflow-wrap: anywhere;
+}
+
+.support-status {
+    display: inline-block;
+    background: #eaf2ff;
+    color: #174a83;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.staff-reply {
+    background: #f0f8f2;
+    border-left: 4px solid #31945b;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 5px;
+    overflow-wrap: anywhere;
+}
+
+.support-message {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.support-back {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #1769aa;
+    text-decoration: none;
+}
+</style>
+
+<div class="support-container">
+
+    <a href="{{ url_for('bookings.passenger_dashboard') }}" class="support-back">
+        ← Back to Dashboard
+    </a>
+
+    <div class="support-card">
+        <h2>Passenger Help Desk</h2>
+        <p>
+            Have a question about your booking, payment, or flight?
+            Send our staff a support request.
+        </p>
+
+        <form method="POST"
+              action="{{ url_for('support.support_page') }}"
+              class="support-form">
+
+            <label for="subject">Subject</label>
+            <input
+                type="text"
+                id="subject"
+                name="subject"
+                maxlength="150"
+                placeholder="Example: Payment issue"
+                required
+            >
+
+            <label for="message">Your Message</label>
+            <textarea
+                id="message"
+                name="message"
+                placeholder="Explain how we can help you..."
+                required
+            ></textarea>
+
+            <button type="submit" class="support-button">
+                Send Support Request
+            </button>
+        </form>
+    </div>
+
+    <div class="support-card">
+        <h2>My Support Requests</h2>
+
+        {% if requests_list %}
+
+            {% for item in requests_list %}
+                <div class="support-item">
+
+                    <h3>Request #{{ item.id }} — {{ item.subject }}</h3>
+
+                    <p>
+                        <span class="support-status">
+                            {{ item.status }}
+                        </span>
+                    </p>
+
+                    <p><strong>Your message:</strong></p>
+                    <div class="support-message">{{ item.message }}</div>
+
+                    {% if item.staff_reply %}
+                        <div class="staff-reply">
+                            <strong>Staff Reply</strong>
+                            <p class="support-message">{{ item.staff_reply }}</p>
+                        </div>
+                    {% else %}
+                        <p>Your request is awaiting a staff reply.</p>
+                    {% endif %}
+
+                    <small>
+                        Submitted:
+                        {{ item.created_at }}
+                    </small>
+
+                </div>
+            {% endfor %}
+
+        {% else %}
+            <p>You haven't submitted any support requests yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

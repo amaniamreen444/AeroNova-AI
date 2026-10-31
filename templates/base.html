@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}AeroNova AI{% endblock %}
+    </title>
+
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+    <!-- Google Fonts -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Main CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<nav class="navbar navbar-expand-lg aeronova-navbar">
+
+    <div class="container">
+
+        <a class="navbar-brand aeronova-brand"
+           href="{{ url_for('main.home') }}">
+
+            <span class="brand-icon">
+                <i class="fa-solid fa-plane"></i>
+            </span>
+
+            <span class="brand-text">
+
+                <strong>AeroNova</strong>
+
+                <small>AI TRAVEL PLATFORM</small>
+
+            </span>
+
+        </a>
+
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu">
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <div class="collapse navbar-collapse"
+             id="navbarMenu">
+
+
+            <ul class="navbar-nav mx-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link active"
+                       href="{{ url_for('main.home') }}">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/flights">
+
+                        Flights
+
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{{ url_for('main.about') }}">
+
+                        About Us
+
+                    </a>
+
+                </li>
+
+
+                {% if session.get("user_role") == "passenger" %}
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/dashboard">
+
+                        My Bookings
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('support.support_page') }}">
+                        <i class="fas fa-headset"></i> Help Desk
+                    </a>
+                </li>
+
+                {% if session.get("user_role") == "admin" %}
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/admin/dashboard">
+
+                        Admin Panel
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+
+                {% if session.get("user_role") == "staff" %}
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/staff/dashboard">
+
+                        Staff Portal
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+
+            <div class="nav-actions">
+
+
+                <button class="nav-ai-btn"
+                        onclick="toggleChatbot()">
+
+                    <i class="fa-solid fa-sparkles"></i>
+
+                    AI Assistant
+
+                </button>
+
+
+                {% if session.get("user_id") %}
+
+                    <span class="logged-user">
+
+                        <i class="fa-solid fa-circle-user"></i>
+
+                        {{ session.get("user_name") }}
+
+                    </span>
+
+
+                    <a href="{{ url_for('auth.logout') }}"
+                       class="nav-login-btn">
+
+                        Logout
+
+                    </a>
+
+
+                {% else %}
+
+                    <a href="{{ url_for('auth.login') }}"
+                       class="nav-login-btn">
+
+                        Login
+
+                    </a>
+
+
+                    <a href="{{ url_for('auth.register') }}"
+                       class="nav-register-btn">
+
+                        Get Started
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================
+     FLASH MESSAGES
+========================================= -->
+
+<div class="container flash-wrapper">
+
+    {% with messages =
+        get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }}
+                            alert-dismissible fade show">
+
+                    {{ message }}
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+
+                    </button>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+</div>
+
+
+<!-- =========================================
+     PAGE CONTENT
+========================================= -->
+
+{% block content %}
+{% endblock %}
+
+
+<!-- =========================================
+     AI CHATBOT
+========================================= -->
+
+<button class="chatbot-float"
+        id="chatbotButton"
+        onclick="toggleChatbot()">
+
+    <i class="fa-solid fa-robot"></i>
+
+    <span>AI</span>
+
+</button>
+
+
+<div class="chatbot-window"
+     id="chatbotWindow">
+
+
+    <div class="chat-header">
+
+        <div class="chat-title">
+
+            <div class="chat-avatar">
+
+                <i class="fa-solid fa-plane"></i>
+
+            </div>
+
+
+            <div>
+
+                <strong>AeroNova AI</strong>
+
+                <small>
+
+                    <i class="fa-solid fa-circle"></i>
+
+                    Your travel companion
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <button onclick="toggleChatbot()">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+    </div>
+
+
+    <div class="chat-body"
+         id="chatMessages">
+
+
+        <div class="bot-message">
+
+            👋 Hello! I'm <strong>AeroNova AI</strong>.
+
+            <br><br>
+
+            Tell me where you want to go and I'll help you plan your journey. ✈️
+
+        </div>
+
+
+        <div class="chat-suggestions">
+
+            <button onclick="quickMessage('Find cheap flights')">
+
+                ✈️ Find flights
+
+            </button>
+
+            <button onclick="quickMessage('Suggest a destination')">
+
+                🌍 Suggest a trip
+
+            </button>
+
+            <button onclick="quickMessage('Check flight status')">
+
+                🛫 Flight status
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="chat-input-area">
+
+        <input type="text"
+               id="chatInput"
+               placeholder="Ask anything about travel..."
+               onkeypress="handleChatKey(event)">
+
+
+        <button onclick="sendMessage()">
+
+            <i class="fa-solid fa-paper-plane"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
+<footer class="main-footer">
+
+    <div class="container">
+
+        <div class="row g-5">
+
+
+            <div class="col-lg-4">
+
+                <a class="footer-brand"
+                   href="{{ url_for('main.home') }}">
+
+                    <i class="fa-solid fa-plane"></i>
+
+                    AeroNova AI
+
+                </a>
+
+
+                <p>
+
+                    Smarter journeys begin here.
+                    Search, compare and manage your flights
+                    with an intelligent travel experience.
+
+                </p>
+
+
+                <div class="social-links">
+
+                    <a href="#">
+
+                        <i class="fa-brands fa-facebook-f"></i>
+
+                    </a>
+
+                    <a href="#">
+
+                        <i class="fa-brands fa-instagram"></i>
+
+                    </a>
+
+                    <a href="#">
+
+                        <i class="fa-brands fa-x-twitter"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-2">
+
+                <h5>Explore</h5>
+
+                <a href="{{ url_for('main.home') }}">
+                    Home
+                </a>
+
+                <a href="/flights">
+                    Flights
+                </a>
+
+                <a href="{{ url_for('main.about') }}">
+                    About Us
+                </a>
+
+            </div>
+
+
+            <div class="col-6 col-lg-2">
+
+                <h5>Services</h5>
+
+                <a href="#">
+                    Flight Search
+                </a>
+
+                <a href="#">
+                    Seat Selection
+                </a>
+
+                <a href="#">
+                    AI Travel Help
+                </a>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="footer-ai-box">
+
+                    <i class="fa-solid fa-sparkles"></i>
+
+                    <div>
+
+                        <strong>Need travel help?</strong>
+
+                        <p>
+                            Ask AeroNova AI for personalized assistance.
+                        </p>
+
+                    </div>
+
+
+                    <button onclick="toggleChatbot()">
+
+                        Ask AI
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 AeroNova AI. All rights reserved.
+            </span>
+
+            <span>
+                Designed for smarter travel ✈️
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- Main JavaScript -->
+
+<script
+    src="{{ url_for('static', filename='js/main.js') }}">
+</script>
+{% include "chatbot.html" %}
+
+</body>
+
+</html>

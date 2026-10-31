@@ -1,0 +1,178 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Cancellation Requests | AeroNova AI
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h2>Ticket Cancellation Requests</h2>
+            <p class="text-muted">
+                Review passenger requests and approve or reject cancellations.
+            </p>
+        </div>
+
+        <a href="{{ url_for('admin.dashboard') }}"
+           class="btn btn-outline-primary">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if cancellation_requests %}
+
+        {% for item in cancellation_requests %}
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
+                        <h5 class="mb-0">
+                            Request #{{ item.request_id }}
+                            — Booking #{{ item.booking_id }}
+                        </h5>
+
+                        {% if item.request_status == "Pending" %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% elif item.request_status == "Approved" %}
+                            <span class="badge bg-success">Approved</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Rejected</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-3 mb-3">
+
+                        <div class="col-md-6">
+                            <strong>Passenger</strong>
+                            <p class="mb-1">{{ item.full_name }}</p>
+                            <small class="text-muted">{{ item.email }}</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <strong>Flight</strong>
+                            <p class="mb-1">
+                                {{ item.airline }} — {{ item.flight_number }}
+                            </p>
+                            <p class="mb-1">
+                                {{ item.origin }} → {{ item.destination }}
+                            </p>
+                            <small class="text-muted">
+                                Departure: {{ item.departure_time }}
+                            </small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <strong>Seat:</strong>
+                            {{ item.seat_number or "Not selected" }}
+                            <br>
+                            <strong>Booking status:</strong>
+                            {{ item.booking_status }}
+                            <br>
+                            <strong>Booking price:</strong>
+                            ₹{{ item.total_price }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <strong>Requested at:</strong>
+                            <p>{{ item.requested_at }}</p>
+                        </div>
+
+                    </div>
+
+                    <div class="p-3 bg-light rounded mb-3">
+                        <strong>Passenger's reason</strong>
+                        <p class="mb-0" style="white-space: pre-wrap;">{{ item.reason }}</p>
+                    </div>
+
+                    {% if item.request_status == "Pending" %}
+
+                        <form method="POST"
+                              action="{{ url_for('admin.resolve_cancellation', request_id=item.request_id) }}">
+
+                            <div class="mb-3">
+                                <label class="form-label" for="note-{{ item.request_id }}">
+                                    Admin note (optional)
+                                </label>
+
+                                <textarea
+                                    class="form-control"
+                                    id="note-{{ item.request_id }}"
+                                    name="admin_note"
+                                    rows="2"
+                                    maxlength="2000"
+                                    placeholder="Add a note for this decision"
+                                ></textarea>
+                            </div>
+
+                            <button type="submit"
+                                    name="action"
+                                    value="approve"
+                                    class="btn btn-success me-2 mb-2"
+                                    onclick="return confirm('Approve this cancellation and cancel the booking?');">
+                                <i class="fa-solid fa-check"></i>
+                                Approve Cancellation
+                            </button>
+
+                            <button type="submit"
+                                    name="action"
+                                    value="reject"
+                                    class="btn btn-danger mb-2"
+                                    onclick="return confirm('Reject this cancellation request?');">
+                                <i class="fa-solid fa-xmark"></i>
+                                Reject Request
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <div class="border-top pt-3">
+                            <strong>Admin note:</strong>
+                            <p>{{ item.admin_note or "No note provided." }}</p>
+                            {% if item.resolved_at %}
+                                <small class="text-muted">
+                                    Reviewed at: {{ item.resolved_at }}
+                                </small>
+                            {% endif %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="alert alert-info">
+            <i class="fa-solid fa-circle-info"></i>
+            No cancellation requests have been submitted yet.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

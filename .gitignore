@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Flask
+instance/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Database backups
+*.sql
+*.sqlite3
+
+# Node dependencies
+node_modules/
+
+# Python cache
+.pytest_cache/

@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+
+{% block title %}
+Select Your Seat | AeroNova
+{% endblock %}
+
+{% block content %}
+
+<section
+    class="booking-page"
+    data-passenger-count="{{ passenger_count }}"
+>
+
+    <div class="container">
+
+        <div class="booking-progress">
+
+            <div class="progress-step completed">
+                <span>
+                    <i class="fa-solid fa-check"></i>
+                </span>
+                Flight
+            </div>
+
+            <div class="progress-line active-line"></div>
+
+            <div class="progress-step completed">
+                <span>
+                    <i class="fa-solid fa-check"></i>
+                </span>
+                Passengers
+            </div>
+
+            <div class="progress-line active-line"></div>
+
+            <div class="progress-step active">
+                <span>3</span>
+                Seats
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step">
+                <span>4</span>
+                Payment
+            </div>
+
+        </div>
+
+
+        <div class="seat-page-layout">
+
+            <div class="seat-map-area">
+
+                <span class="section-mini-title">
+                    SEAT SELECTION
+                </span>
+
+                <h1>
+                    Choose your perfect seat
+                </h1>
+
+                <p class="booking-subtitle">
+
+                    Select exactly
+                    <strong>{{ passenger_count }}</strong>
+                    seat(s).
+
+                </p>
+
+
+                <div class="seat-legend">
+
+                    <div>
+                        <span class="legend-seat available"></span>
+                        Available
+                    </div>
+
+                    <div>
+                        <span class="legend-seat selected"></span>
+                        Selected
+                    </div>
+
+                    <div>
+                        <span class="legend-seat occupied"></span>
+                        Occupied
+                    </div>
+
+                </div>
+
+
+                <div class="aircraft">
+
+                    <div class="cockpit">
+
+                        <i class="fa-solid fa-plane"></i>
+
+                        <span>
+                            COCKPIT
+                        </span>
+
+                    </div>
+
+
+                    <div class="seat-labels">
+
+                        <span>A</span>
+                        <span>B</span>
+                        <span>C</span>
+                        <span></span>
+                        <span>D</span>
+                        <span>E</span>
+                        <span>F</span>
+
+                    </div>
+
+
+                    {% for row in range(1, 11) %}
+
+                    <div class="seat-row">
+
+                        <span class="row-number">
+                            {{ row }}
+                        </span>
+
+
+                        {% for column in ["A", "B", "C"] %}
+
+                        <button
+                            type="button"
+                            class="seat"
+                            data-seat="{{ row }}{{ column }}"
+                        >
+
+                            {{ column }}
+
+                        </button>
+
+                        {% endfor %}
+
+
+                        <div class="seat-aisle"></div>
+
+
+                        {% for column in ["D", "E", "F"] %}
+
+                        <button
+                            type="button"
+                            class="seat"
+                            data-seat="{{ row }}{{ column }}"
+                        >
+
+                            {{ column }}
+
+                        </button>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endfor %}
+
+
+                    <div class="aircraft-tail">
+                        ✈
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <aside class="seat-summary">
+
+                <h3>
+                    Your Selection
+                </h3>
+
+                <div class="summary-flight-route">
+
+                    {{ flight.origin }}
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                    {{ flight.destination }}
+
+                </div>
+
+
+                <div class="selected-seat-box">
+
+                    <span>
+                        SELECTED SEATS
+                    </span>
+
+                    <strong id="selectedSeatsText">
+                        No seats selected
+                    </strong>
+
+                </div>
+
+
+                <div class="seat-counter">
+
+                    <span>
+                        Seats selected
+                    </span>
+
+                    <strong>
+                        <span id="selectedCount">
+                            0
+                        </span>
+
+                        / {{ passenger_count }}
+
+                    </strong>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    id="seatForm"
+                >
+
+                    <input
+                        type="hidden"
+                        name="selected_seats"
+                        id="selectedSeatsInput"
+                    >
+
+                    <button
+                        type="submit"
+                        class="continue-booking-btn"
+                        id="continueButton"
+                        disabled
+                    >
+
+                        Continue to Payment
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    
+        const bookingPage = document.querySelector(".booking-page");
+    
+        const maxSeats = Number(
+            bookingPage.dataset.passengerCount
+        );
+    
+        let selectedSeats = [];
+    
+        const seats =
+            document.querySelectorAll(".seat");
+    
+        const selectedCount =
+            document.getElementById("selectedCount");
+    
+        const selectedText =
+            document.getElementById("selectedSeatsText");
+    
+        const selectedInput =
+            document.getElementById("selectedSeatsInput");
+    
+        const continueButton =
+            document.getElementById("continueButton");
+    
+    
+        seats.forEach(function (seat) {
+    
+            seat.addEventListener("click", function () {
+    
+                const seatNumber =
+                    this.dataset.seat;
+    
+    
+                if (this.classList.contains("selected")) {
+    
+                    this.classList.remove("selected");
+    
+                    selectedSeats =
+                        selectedSeats.filter(
+                            function (item) {
+                                return item !== seatNumber;
+                            }
+                        );
+    
+                } else {
+    
+                    if (selectedSeats.length >= maxSeats) {
+    
+                        alert(
+                            "You can select only " +
+                            maxSeats +
+                            " seat(s)."
+                        );
+    
+                        return;
+                    }
+    
+                    this.classList.add("selected");
+    
+                    selectedSeats.push(seatNumber);
+                }
+    
+    
+                selectedCount.textContent =
+                    selectedSeats.length;
+    
+    
+                if (selectedSeats.length > 0) {
+    
+                    selectedText.textContent =
+                        selectedSeats.join(", ");
+    
+                } else {
+    
+                    selectedText.textContent =
+                        "No seats selected";
+                }
+    
+    
+                selectedInput.value =
+                    selectedSeats.join(",");
+    
+    
+                if (selectedSeats.length === maxSeats) {
+    
+                    continueButton.disabled = false;
+    
+                } else {
+    
+                    continueButton.disabled = true;
+                }
+    
+            });
+    
+        });
+    
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,258 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .helpdesk-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .helpdesk-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .helpdesk-header h1 {
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .helpdesk-header p {
+        color: #666;
+        margin: 0;
+    }
+
+    .back-btn {
+        display: inline-block;
+        padding: 10px 16px;
+        background: #173b67;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+
+    .request-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .request-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .request-top h3 {
+        margin: 0 0 8px;
+        color: #173b67;
+    }
+
+    .request-meta {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .request-message {
+        background: #f7f9fc;
+        padding: 15px;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        margin: 15px 0;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 11px;
+        border-radius: 20px;
+        background: #fff3cd;
+        color: #856404;
+        font-size: 13px;
+        font-weight: bold;
+        height: fit-content;
+    }
+
+    .reply-label {
+        display: block;
+        margin: 16px 0 7px;
+        font-weight: 600;
+    }
+
+    .helpdesk-container textarea,
+    .helpdesk-container select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font: inherit;
+    }
+
+    .helpdesk-container textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .action-btn {
+        margin-top: 10px;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        background: #173b67;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .status-form {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid #eee;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        background: #f7f9fc;
+        border-radius: 12px;
+    }
+
+    .flash-message {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        background: #e8f7ed;
+        color: #176534;
+    }
+
+    @media (max-width: 600px) {
+        .helpdesk-container {
+            margin: 20px auto;
+            padding: 12px;
+        }
+
+        .request-card {
+            padding: 16px;
+        }
+    }
+</style>
+
+<div class="helpdesk-container">
+
+    <div class="helpdesk-header">
+        <div>
+            <h1>Staff Help Desk</h1>
+            <p>View passenger queries, reply to them, and manage request status.</p>
+        </div>
+
+        <a href="{{ url_for('staff.dashboard') }}" class="back-btn">
+            Back to Dashboard
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if support_requests %}
+        {% for item in support_requests %}
+            <div class="request-card">
+
+                <div class="request-top">
+                    <div>
+                        <h3>{{ item.subject }}</h3>
+                        <div class="request-meta">
+                            Request #{{ item.id }} ·
+                            Passenger: {{ item.full_name }} ·
+                            {{ item.email }}
+                            <br>
+                            Submitted:
+                            {{ item.created_at }}
+                        </div>
+                    </div>
+
+                    <span class="status-badge">
+                        {{ item.status }}
+                    </span>
+                </div>
+
+                <strong>Passenger's Message</strong>
+                <div class="request-message">{{ item.message }}</div>
+
+                <form
+                    method="POST"
+                    action="{{ url_for('staff.reply_support_request', request_id=item.id) }}"
+                >
+                    <label class="reply-label" for="reply-{{ item.id }}">
+                        Reply to Passenger
+                    </label>
+
+                    <textarea
+                        id="reply-{{ item.id }}"
+                        name="staff_reply"
+                        maxlength="5000"
+                        placeholder="Type your response here..."
+                        required
+                    >{{ item.staff_reply or '' }}</textarea>
+
+                    <button type="submit" class="action-btn">
+                        Save Reply
+                    </button>
+                </form>
+
+                <form
+                    method="POST"
+                    class="status-form"
+                    action="{{ url_for('staff.update_support_status', request_id=item.id) }}"
+                >
+                    <label class="reply-label" for="status-{{ item.id }}">
+                        Update Request Status
+                    </label>
+
+                    <select id="status-{{ item.id }}" name="status">
+                        <option value="Open"
+                            {% if item.status == 'Open' %}selected{% endif %}>
+                            Open
+                        </option>
+
+                        <option value="In Progress"
+                            {% if item.status == 'In Progress' %}selected{% endif %}>
+                            In Progress
+                        </option>
+
+                        <option value="Resolved"
+                            {% if item.status == 'Resolved' %}selected{% endif %}>
+                            Resolved
+                        </option>
+                    </select>
+
+                    <button type="submit" class="action-btn">
+                        Update Status
+                    </button>
+                </form>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <h2>No Support Requests Yet</h2>
+            <p>Passenger messages will appear here when they submit a request.</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

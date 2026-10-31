@@ -1,0 +1,200 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+My Dashboard | AeroNova AI
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+
+    <h2>My Dashboard</h2>
+
+    <p>
+        Welcome back,
+        {{ session.get("user_name") }}
+    </p>
+
+    {% if cancellation_notifications %}
+    <div class="mt-4 mb-4">
+        <h4>
+            <i class="fa-solid fa-bell"></i>
+            Cancellation Notifications
+        </h4>
+
+        {% for notification in cancellation_notifications %}
+
+            {% if notification.request_status == 'Approved' %}
+                <div class="alert alert-success">
+                    <strong>Cancellation Approved!</strong>
+                    <p class="mb-1">
+                        Your cancellation request for flight
+                        {{ notification.flight_number }}
+                        ({{ notification.origin }} →
+                        {{ notification.destination }})
+                        has been approved.
+                    </p>
+                </div>
+
+            {% elif notification.request_status == 'Rejected' %}
+                <div class="alert alert-warning">
+                    <strong>Cancellation Rejected</strong>
+                    <p class="mb-1">
+                        Your cancellation request for flight
+                        {{ notification.flight_number }}
+                        ({{ notification.origin }} →
+                        {{ notification.destination }})
+                        has been rejected.
+                    </p>
+                </div>
+            {% endif %}
+
+            {% if notification.admin_note %}
+                <p>
+                    <strong>Admin note:</strong>
+                    {{ notification.admin_note }}
+                </p>
+            {% endif %}
+
+            {% if notification.resolved_at %}
+                <small class="text-muted">
+                    Reviewed on {{ notification.resolved_at }}
+                </small>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+{% endif %}
+
+<a href="{{ url_for('support.support_page') }}" class="helpdesk-button">
+    <i class="fas fa-headset"></i>
+    Help Desk
+</a>
+
+
+    <h4 class="mt-5">My Bookings</h4>
+
+    {% if bookings %}
+
+        <div class="table-responsive">
+
+            <table class="table table-striped align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Flight</th>
+                        <th>Route</th>
+                        <th>Departure</th>
+                        <th>Seat</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Cancellation</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for booking in bookings %}
+
+                    <tr>
+
+                        <td>{{ booking.flight_number }}</td>
+
+                        <td>
+                            {{ booking.origin }}
+                            →
+                            {{ booking.destination }}
+                        </td>
+
+                        <td>{{ booking.departure_time }}</td>
+
+                        <td>
+                            {{ booking.seat_number or "Not Selected" }}
+                        </td>
+
+                        <td>₹{{ booking.total_price }}</td>
+
+                        <td>
+                            {% if booking.booking_status == "Confirmed" %}
+                                <span class="badge bg-success">Confirmed</span>
+                            {% elif booking.booking_status == "Cancelled" %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    {{ booking.booking_status }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+
+                            {% if booking.booking_status == "Confirmed" %}
+
+                                <form
+                                    action="{{ url_for('bookings.request_cancellation', booking_id=booking.id) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Submit a cancellation request for this booking?');"
+                                >
+
+                                    <div class="mb-2">
+
+                                        <textarea
+                                            name="reason"
+                                            class="form-control"
+                                            rows="2"
+                                            placeholder="Reason for cancellation"
+                                            maxlength="1000"
+                                            required
+                                        ></textarea>
+
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-danger btn-sm"
+                                    >
+                                        <i class="fa-solid fa-ban"></i>
+                                        Request Cancellation
+                                    </button>
+
+                                </form>
+
+                            {% elif booking.booking_status == "Cancelled" %}
+
+                                <span class="text-danger">
+                                    Booking cancelled
+                                </span>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Not available
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            You don't have any bookings yet.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

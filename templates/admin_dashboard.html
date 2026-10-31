@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard | AeroNova AI
+{% endblock %}
+
+{% block content %}
+
+<main class="dashboard-page">
+    <div class="dashboard-container">
+
+        <div class="dashboard-heading">
+            <div>
+                <span class="dashboard-label">AERONOVA AI</span>
+                <h1>Admin Dashboard</h1>
+
+<!-- Cancellation Requests Link -->
+<div class="mb-4">
+    <a href="{{ url_for('admin.cancellations') }}"
+       class="btn btn-danger">
+
+        <i class="fa-solid fa-ticket"></i>
+
+        Cancellation Requests
+
+        {% if pending_cancellations is defined and pending_cancellations > 0 %}
+            <span class="badge bg-light text-danger ms-2">
+                {{ pending_cancellations }}
+            </span>
+        {% endif %}
+
+    </a>
+</div>
+
+                <p>Monitor your airline booking platform from one place.</p>
+            </div>
+
+            <div class="dashboard-badge">
+                <i class="fas fa-shield-alt"></i>
+                Administrator
+            </div>
+        </div>
+
+        <div class="dashboard-stats">
+
+            <div class="dashboard-stat-card users-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+
+                <div>
+                    <p>Total Users</p>
+                    <h2>{{ total_users }}</h2>
+                    <span>Registered accounts</span>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card flights-card">
+                <div class="stat-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+
+                <div>
+                    <p>Total Flights</p>
+                    <h2>{{ total_flights }}</h2>
+                    <span>Available flight records</span>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card bookings-card">
+                <div class="stat-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+
+                <div>
+                    <p>Total Bookings</p>
+                    <h2>{{ total_bookings }}</h2>
+                    <span>Booking transactions</span>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card revenue-card">
+                <div class="stat-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+
+                <div>
+                    <p>Total Revenue</p>
+                    <h2>₹{{ revenue }}</h2>
+                    <span>Recorded booking revenue</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dashboard-section-grid">
+
+            <div class="dashboard-panel">
+                <div class="panel-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+
+                <h3>Platform Overview</h3>
+                <p>
+                    View important information about users, flights,
+                    bookings and revenue using the statistics above.
+                </p>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="panel-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+
+                <h3>Administration</h3>
+                <p>
+                    Manage airline operations, monitor booking activity
+                    and maintain the AeroNova AI platform.
+                </p>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="panel-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <h3>Secure Access</h3>
+                <p>
+                    This dashboard is available only to authenticated
+                    administrator accounts.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+<div class="recent-bookings-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="dashboard-label">BOOKING ACTIVITY</span>
+            <h2>Recent Bookings</h2>
+            <p>Latest booking transactions from AeroNova AI.</p>
+        </div>
+    </div>
+
+    {% if recent_bookings %}
+
+    <div class="table-responsive">
+        <table class="table recent-bookings-table">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Passenger</th>
+                    <th>Flight</th>
+                    <th>Route</th>
+                    <th>Seat</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for booking in recent_bookings %}
+                <tr>
+                    <td>
+                        <strong>#{{ booking.id }}</strong>
+                    </td>
+
+                    <td>
+                        <strong>{{ booking.full_name or "Unknown" }}</strong>
+                        <small>{{ booking.email or "No email" }}</small>
+                    </td>
+
+                    <td>
+                        {{ booking.flight_number or "N/A" }}
+                        <small>{{ booking.airline or "N/A" }}</small>
+                    </td>
+
+                    <td>
+                        {{ booking.origin or "N/A" }}
+                        <i class="fas fa-arrow-right route-arrow"></i>
+                        {{ booking.destination or "N/A" }}
+                    </td>
+
+                    <td>
+                        <span class="seat-badge">
+                            {{ booking.seat_number or "N/A" }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <strong>₹{{ booking.total_price }}</strong>
+                    </td>
+
+                    <td>
+                        <span class="booking-status confirmed-status">
+                            {{ booking.booking_status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="empty-bookings">
+        <i class="fas fa-ticket-alt"></i>
+        <h3>No bookings found</h3>
+        <p>New bookings will appear here automatically.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

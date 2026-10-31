@@ -1,0 +1,153 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Staff Portal | AeroNova AI
+{% endblock %}
+
+{% block content %}
+
+<main class="dashboard-page">
+    <div class="dashboard-container">
+
+        <div class="dashboard-heading">
+            <div>
+                <span class="dashboard-label">AERONOVA AI</span>
+                <h1>Airline Staff Operations Portal</h1>
+                <p>Manage check-ins, gates, flight operations and passenger support.</p>
+            </div>
+
+            <div class="dashboard-badge staff-badge">
+                <i class="fas fa-user-tie"></i>
+                Staff Member
+            </div>
+        </div>
+
+        <div class="dashboard-stats staff-stats">
+
+            <div class="dashboard-stat-card users-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div>
+                    <p>Passenger Check-In</p>
+                    <h2><i class="fas fa-check-circle"></i></h2>
+                    <span>Manage passenger check-ins</span>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card flights-card">
+                <div class="stat-icon">
+                    <i class="fas fa-door-open"></i>
+                </div>
+                <div>
+                    <p>Gate Updates</p>
+                    <h2><i class="fas fa-plane-departure"></i></h2>
+                    <span>Update boarding gate details</span>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card bookings-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <p>Flight Status</p>
+                    <h2><i class="fas fa-route"></i></h2>
+                    <span>Monitor flight operations</span>
+                </div>
+            </div>
+
+            <div class="dashboard-stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div>
+                    <p>Staff Help Desk</p>
+                    <h2><i class="fas fa-comments"></i></h2>
+                    <span>Respond to passenger queries</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dashboard-section-grid">
+
+            <div class="dashboard-panel">
+                <div class="panel-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <h3>Passenger Check-In</h3>
+                <p>
+                    Verify passenger details and manage the check-in
+                    process for scheduled flights.
+                </p>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="panel-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3>Gate Updates</h3>
+                <p>
+                    Maintain gate information and provide updated
+                    boarding details for passengers.
+                </p>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="panel-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+                <h3>Flight Status</h3>
+                <p>
+                    Monitor scheduled flights and update operational
+                    information when required.
+                </p>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="panel-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Staff Help Desk</h3>
+                <p>
+                    View passenger support requests, send replies
+                    and update request statuses.
+                </p>
+                <a
+                    href="{{ url_for('staff.helpdesk') }}"
+                    class="helpdesk-button"
+                >
+                    Open Help Desk
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+<style>
+    .helpdesk-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 10px 16px;
+        background: #173b67;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .helpdesk-button:hover {
+        background: #24558c;
+        color: #fff;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,315 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Payment | AeroNova
+{% endblock %}
+
+{% block content %}
+
+<section class="booking-page">
+    <div class="container">
+
+        <div class="booking-progress">
+            <div class="progress-step completed">
+                <span><i class="fa-solid fa-check"></i></span> Flight
+            </div>
+            <div class="progress-line active-line"></div>
+            <div class="progress-step completed">
+                <span><i class="fa-solid fa-check"></i></span> Passengers
+            </div>
+            <div class="progress-line active-line"></div>
+            <div class="progress-step completed">
+                <span><i class="fa-solid fa-check"></i></span> Seats
+            </div>
+            <div class="progress-line active-line"></div>
+            <div class="progress-step active">
+                <span>4</span> Payment
+            </div>
+        </div>
+
+        <div class="payment-layout">
+
+            <div class="payment-main">
+                <span class="section-mini-title">SECURE PAYMENT</span>
+                <h1>Complete your booking</h1>
+                <p class="booking-subtitle">
+                    Choose a payment method to continue.
+                </p>
+
+                <form method="POST" id="paymentForm">
+
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="UPI" required>
+                        <div class="payment-icon">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <div>
+                            <strong>UPI Payment</strong>
+                            <span>Google Pay, PhonePe, Paytm and more</span>
+                        </div>
+                    </label>
+
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="Card">
+                        <div class="payment-icon">
+                            <i class="fa-solid fa-credit-card"></i>
+                        </div>
+                        <div>
+                            <strong>Credit / Debit Card</strong>
+                            <span>Demo card payment</span>
+                        </div>
+                    </label>
+
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="Net Banking">
+                        <div class="payment-icon">
+                            <i class="fa-solid fa-building-columns"></i>
+                        </div>
+                        <div>
+                            <strong>Net Banking</strong>
+                            <span>Choose a demo bank</span>
+                        </div>
+                    </label>
+
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="Demo Payment">
+                        <div class="payment-icon">
+                            <i class="fa-solid fa-flask"></i>
+                        </div>
+                        <div>
+                            <strong>Demo Payment</strong>
+                            <span>Simulated payment for project demonstration</span>
+                        </div>
+                    </label>
+
+                    <button type="button" id="continuePayment" class="continue-booking-btn">
+                        Continue to Payment
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div id="paymentDemoPanel" class="payment-demo-panel" hidden>
+                    <hr>
+                    <h3 id="demoTitle">Complete Demo Payment</h3>
+                    <p id="demoDescription">
+                        This is a simulated payment for AeroNova AI.
+                    </p>
+
+                    <div id="upiDemo" hidden>
+
+                        <div class="demo-qr">
+                            <img
+                                src="{{ url_for('static', filename='images/demo-upi-qr.png') }}"
+                                alt="Demo UPI QR code"
+                                class="demo-qr-image"
+                            >
+                            <p>DEMO PAYMENT</p>
+                        </div>
+                        
+                        <p class="demo-note">
+                            This is not a real UPI QR code. No money will be transferred.
+                        </p>
+                        <p>Choose Google Pay, PhonePe or Paytm in a real payment integration.</p>
+                    </div>
+
+                    <div id="cardDemo" hidden>
+                        <label for="demoCardName">Cardholder name</label>
+                        <input class="form-control mb-3" id="demoCardName"
+                               placeholder="Demo User" autocomplete="off">
+
+                        <label for="demoCardNumber">Demo card number</label>
+                        <input class="form-control mb-3" id="demoCardNumber"
+                               placeholder="4242 4242 4242 4242"
+                               inputmode="numeric" autocomplete="off">
+
+                        <p class="demo-note">
+                            Use only fictional demo details. Do not enter real card information.
+                        </p>
+                    </div>
+
+                    <div id="bankDemo" hidden>
+                        <label for="demoBank">Select a demo bank</label>
+                        <select id="demoBank" class="form-select">
+                            <option value="">Choose a bank</option>
+                            <option>State Bank of India (Demo)</option>
+                            <option>HDFC Bank (Demo)</option>
+                            <option>ICICI Bank (Demo)</option>
+                            <option>Axis Bank (Demo)</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="simulatePayment" class="continue-booking-btn mt-3">
+                        Simulate Payment Success
+                        <i class="fa-solid fa-check"></i>
+                    </button>
+
+                    <p class="demo-note mt-2">
+                        Demo only — this button does not transfer real money.
+                    </p>
+                </div>
+            </div>
+
+            <aside class="payment-summary">
+                <span>BOOKING SUMMARY</span>
+                <h3>{{ flight.airline }} {{ flight.flight_number }}</h3>
+                <p>{{ flight.origin }} → {{ flight.destination }}</p>
+                <hr>
+
+                <div class="payment-summary-row">
+                    <span>Passengers</span>
+                    <strong>{{ passengers|length }}</strong>
+                </div>
+
+                <div class="payment-summary-row">
+                    <span>Seats</span>
+                    <strong>{{ seats|join(", ") }}</strong>
+                </div>
+
+                <div class="payment-summary-row total-payment">
+                    <span>Total Amount</span>
+                    <strong>₹{{ "{:,.0f}".format(total_price) }}</strong>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</section>
+
+<style>
+.payment-demo-panel {
+    margin-top: 24px;
+    padding: 22px;
+    border: 1px solid #dce5f3;
+    border-radius: 16px;
+    background: #f8faff;
+}
+.payment-demo-panel h3 {
+    margin-bottom: 10px;
+}
+.demo-qr {
+    width: 180px;
+    height: 180px;
+    margin: 20px auto;
+    border: 2px dashed #3478f6;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #3478f6;
+    background: white;
+}
+
+.demo-qr {
+    width: 220px;
+    height: 240px;
+    margin: 20px auto;
+    border: 1px solid #dce5f3;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #3478f6;
+    background: white;
+}
+
+.demo-qr-image {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+}
+
+.demo-qr p {
+    margin: 8px 0 0;
+    font-weight: bold;
+}
+
+.demo-qr p {
+    margin: 8px 0 0;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+.demo-note {
+    color: #65728a;
+    font-size: 13px;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const continueButton = document.getElementById("continuePayment");
+    const form = document.getElementById("paymentForm");
+    const panel = document.getElementById("paymentDemoPanel");
+    const title = document.getElementById("demoTitle");
+    const description = document.getElementById("demoDescription");
+
+    const upiDemo = document.getElementById("upiDemo");
+    const cardDemo = document.getElementById("cardDemo");
+    const bankDemo = document.getElementById("bankDemo");
+
+    let selectedMethod = "";
+
+    continueButton.addEventListener("click", function () {
+        const selected = form.querySelector('input[name="payment_method"]:checked');
+
+        if (!selected) {
+            alert("Please choose a payment method first.");
+            return;
+        }
+
+        selectedMethod = selected.value;
+
+        upiDemo.hidden = true;
+        cardDemo.hidden = true;
+        bankDemo.hidden = true;
+
+        if (selectedMethod === "UPI") {
+            title.textContent = "UPI Demo Payment";
+            description.textContent = "Choose your preferred UPI app for this demonstration.";
+            upiDemo.hidden = false;
+        } else if (selectedMethod === "Card") {
+            title.textContent = "Demo Card Payment";
+            description.textContent = "Enter fictional details to demonstrate the card payment screen.";
+            cardDemo.hidden = false;
+        } else if (selectedMethod === "Net Banking") {
+            title.textContent = "Demo Net Banking";
+            description.textContent = "Select a bank to continue with the simulated payment.";
+            bankDemo.hidden = false;
+        } else {
+            title.textContent = "Demo Payment";
+            description.textContent = "Continue to simulate a successful payment.";
+        }
+
+        panel.hidden = false;
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    document.getElementById("simulatePayment").addEventListener("click", function () {
+        if (!selectedMethod) {
+            alert("Please choose a payment method first.");
+            return;
+        }
+
+        if (selectedMethod === "Card") {
+            const name = document.getElementById("demoCardName").value.trim();
+            const number = document.getElementById("demoCardNumber").value.replace(/\s/g, "");
+
+            if (!name || !/^\d{12,19}$/.test(number)) {
+                alert("Enter a demo cardholder name and a fictional 12–19 digit card number.");
+                return;
+            }
+        }
+
+        if (selectedMethod === "Net Banking" && !document.getElementById("demoBank").value) {
+            alert("Please choose a demo bank.");
+            return;
+        }
+
+        form.requestSubmit();
+    });
+});
+</script>
+
+{% endblock %}

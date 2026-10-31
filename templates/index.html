@@ -1,0 +1,737 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+AeroNova AI | Fly Smarter
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================================
+     HERO
+========================================= -->
+
+<section class="hero-section">
+
+    <div class="hero-overlay"></div>
+
+
+    <div class="container hero-content">
+
+
+        <div class="hero-badge">
+
+            <span class="pulse-dot"></span>
+
+            AI-POWERED TRAVEL EXPERIENCE
+
+        </div>
+
+
+        <h1>
+
+            Your Next Journey<br>
+
+            Starts <span>Beyond The Horizon.</span>
+
+        </h1>
+
+
+        <p class="hero-description">
+
+            Discover smarter ways to search, compare and book flights.
+            Let AeroNova AI make every journey simpler.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a href="#flight-search"
+               class="primary-hero-btn">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Find Your Flight
+
+            </a>
+
+
+            <button class="secondary-hero-btn"
+                    onclick="toggleChatbot()">
+
+                <i class="fa-solid fa-sparkles"></i>
+
+                Ask AeroNova AI
+
+            </button>
+
+        </div>
+
+
+        <div class="hero-stats">
+
+            <div>
+
+                <strong>120+</strong>
+
+                <span>Destinations</span>
+
+            </div>
+
+
+            <div>
+
+                <strong>24/7</strong>
+
+                <span>AI Assistance</span>
+
+            </div>
+
+
+            <div>
+
+                <strong>10K+</strong>
+
+                <span>Happy Travelers</span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     FLIGHT SEARCH
+========================================= -->
+
+<section class="search-section"
+         id="flight-search">
+
+    <div class="container">
+
+
+        <div class="flight-search-box">
+
+
+            <div class="search-top">
+
+                <div>
+
+                    <span class="section-mini-title">
+
+                        FIND YOUR PERFECT FLIGHT
+
+                    </span>
+
+                    <h2>Where would you like to go?</h2>
+
+                </div>
+
+
+                <div class="trip-options">
+
+                    <label>
+
+                        <input type="radio"
+                               name="trip_type"
+                               checked>
+
+                        Round Trip
+
+                    </label>
+
+
+                    <label>
+
+                        <input type="radio"
+                               name="trip_type">
+
+                        One Way
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <form action="/flights"
+                  method="GET"
+                  class="flight-search-form">
+
+
+                <div class="search-field">
+
+                    <i class="fa-solid fa-plane-departure"></i>
+
+                    <div>
+
+                        <label>FROM</label>
+
+                        <input type="text"
+                               name="origin"
+                               placeholder="Departure city"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <button type="button"
+                        class="swap-btn"
+                        title="Swap cities"
+                        onclick="swapCities()">
+
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+
+                </button>
+
+
+                <div class="search-field">
+
+                    <i class="fa-solid fa-plane-arrival"></i>
+
+                    <div>
+
+                        <label>TO</label>
+
+                        <input type="text"
+                               name="destination"
+                               placeholder="Arrival city"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="search-field date-field">
+
+                    <i class="fa-solid fa-calendar-days"></i>
+
+                    <div>
+
+                        <label>DEPARTURE</label>
+
+                        <input type="date"
+                               name="departure_date"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="search-field">
+
+                    <i class="fa-solid fa-user-group"></i>
+
+                    <div>
+
+                        <label>TRAVELERS</label>
+
+                        <select name="passengers">
+
+                            <option value="1">
+                                1 Passenger
+                            </option>
+
+                            <option value="2">
+                                2 Passengers
+                            </option>
+
+                            <option value="3">
+                                3 Passengers
+                            </option>
+
+                            <option value="4">
+                                4 Passengers
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <button type="submit"
+                        class="search-flight-btn">
+
+                    Search Flights
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     TRUST STRIP
+========================================= -->
+
+<section class="trust-strip">
+
+    <div class="container trust-grid">
+
+
+        <div>
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+            <span>
+                <strong>Secure Booking</strong>
+                Protected passenger information
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <i class="fa-solid fa-tag"></i>
+
+            <span>
+                <strong>Smart Pricing</strong>
+                Compare available fares
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <i class="fa-solid fa-robot"></i>
+
+            <span>
+                <strong>AI Assistance</strong>
+                Travel help anytime
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <i class="fa-solid fa-headset"></i>
+
+            <span>
+                <strong>Always Here</strong>
+                24/7 travel support
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     POPULAR DESTINATIONS
+========================================= -->
+
+<section class="destination-section">
+
+    <div class="container">
+
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-mini-title">
+
+                    EXPLORE THE WORLD
+
+                </span>
+
+                <h2>Popular destinations for your next escape.</h2>
+
+            </div>
+
+
+            <a href="/flights"
+               class="view-all-link">
+
+                View all flights
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="destination-card">
+
+                    <img src="{{ url_for('static', filename='images/dubai.jpg') }}" alt="Dubai">
+                         alt="Dubai">
+
+
+                    <div class="destination-content">
+
+                        <span>United Arab Emirates</span>
+
+                        <h3>Dubai</h3>
+
+                        <p>
+                            Luxury, adventure and unforgettable experiences.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="destination-card">
+
+                    <img src="{{ url_for('static', filename='images/london.jpg') }}" alt="London">
+
+
+                    <div class="destination-content">
+
+                        <span>United Kingdom</span>
+
+                        <h3>London</h3>
+
+                        <p>
+                            History, culture and iconic city experiences.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="destination-card">
+
+                    <img src="{{ url_for('static', filename='images/paris.jpg') }}" alt="Paris">
+
+
+                    <div class="destination-content">
+
+                        <span>France</span>
+
+                        <h3>Paris</h3>
+
+                        <p>
+                            Discover art, romance and timeless beauty.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="destination-card">
+
+                    <img src="{{ url_for('static', filename='images/maldives.jpg') }}" alt="Maldives">
+
+
+                    <div class="destination-content">
+
+                        <span>Indian Ocean</span>
+
+                        <h3>Maldives</h3>
+
+                        <p>
+                            Escape to crystal waters and peaceful islands.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     AI SECTION
+========================================= -->
+
+<section class="ai-section">
+
+    <div class="container">
+
+        <div class="ai-content">
+
+
+            <div class="ai-left">
+
+                <div class="ai-orb">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <span class="orbit orbit-one"></span>
+
+                    <span class="orbit orbit-two"></span>
+
+                </div>
+
+            </div>
+
+
+            <div class="ai-right">
+
+                <span class="section-mini-title light-title">
+
+                    AERONOVA INTELLIGENCE
+
+                </span>
+
+
+                <h2>
+
+                    Travel planning,
+                    now with an intelligent co-pilot.
+
+                </h2>
+
+
+                <p>
+
+                    Ask questions naturally and let AeroNova AI help you
+                    explore destinations, search flights and understand
+                    your travel options.
+
+                </p>
+
+
+                <div class="ai-feature-list">
+
+                    <span>
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Natural conversation
+
+                    </span>
+
+
+                    <span>
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Smart travel suggestions
+
+                    </span>
+
+
+                    <span>
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Available anytime
+
+                    </span>
+
+                </div>
+
+
+                <button onclick="toggleChatbot()"
+                        class="primary-light-btn">
+
+                    Talk to AeroNova AI
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     WHY CHOOSE US
+========================================= -->
+
+<section class="features-section">
+
+    <div class="container">
+
+
+        <div class="center-heading">
+
+            <span class="section-mini-title">
+
+                WHY AERONOVA
+
+            </span>
+
+            <h2>
+                Designed around a better travel experience.
+            </h2>
+
+            <p>
+                From searching to boarding, we bring your journey together.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4 mt-3">
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                    </div>
+
+                    <h4>Fast & Simple Booking</h4>
+
+                    <p>
+                        Find and book your preferred flight through a smooth,
+                        simple booking experience.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+
+                        <i class="fa-solid fa-chair"></i>
+
+                    </div>
+
+                    <h4>Visual Seat Selection</h4>
+
+                    <p>
+                        Choose your preferred seat using an interactive
+                        aircraft seat map.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+
+                        <i class="fa-solid fa-qrcode"></i>
+
+                    </div>
+
+                    <h4>Digital Boarding Pass</h4>
+
+                    <p>
+                        Access your booking and boarding information digitally
+                        with a QR code.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     CTA
+========================================= -->
+
+<section class="cta-section">
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <div>
+
+                <span>YOUR NEXT ADVENTURE IS WAITING</span>
+
+                <h2>
+                    Ready to explore beyond the horizon?
+                </h2>
+
+                <p>
+                    Start planning your next journey with AeroNova AI.
+                </p>
+
+            </div>
+
+
+            <a href="#flight-search"
+               class="cta-button">
+
+                Search Flights
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
